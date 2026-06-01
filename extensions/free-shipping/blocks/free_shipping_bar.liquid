@@ -1,0 +1,73 @@
+{%- comment -%}
+  Free shipping progress bar.
+  Target: body (an app embed enabled in Theme settings > App embeds).
+  Only renders on the cart page. JS moves it directly below the cart title.
+  Threshold: shop metafield (shared with the discount function).
+  Design: app-owned metaobject (colors, spacing, text, messages).
+{%- endcomment -%}
+{%- if request.page_type == 'cart' -%}
+  {{ 'free_shipping_bar.css' | asset_url | stylesheet_tag }}
+
+  {%- assign threshold = shop.metafields["$app:free_shipping"].threshold.value | default: 100 -%}
+  {%- assign design = shop.metaobjects["$app:free_shipping_bar"]["free-shipping-bar"].config.value -%}
+
+  {%- assign bg = design.backgroundColor | default: "#f1f8f5" -%}
+  {%- assign text_color = design.textColor | default: "#202223" -%}
+  {%- assign bar_color = design.barColor | default: "#008060" -%}
+  {%- assign track_color = design.trackColor | default: "#e3e3e3" -%}
+  {%- assign text_size = design.textSize | default: 14 -%}
+  {%- assign padding = design.padding | default: 12 -%}
+  {%- assign radius = design.borderRadius | default: 8 -%}
+  {%- assign progress_message = design.progressMessage | default: "You're [amount] away from free shipping 🚚" -%}
+  {%- assign success_message = design.successMessage | default: "🎉 You've unlocked free shipping!" -%}
+
+  {%- assign threshold_cents = threshold | times: 100 -%}
+  {%- assign remaining = threshold_cents | minus: cart.total_price -%}
+  {%- if remaining < 0 -%}{%- assign remaining = 0 -%}{%- endif -%}
+  {%- assign percent = cart.total_price | times: 100 | divided_by: threshold_cents -%}
+  {%- if percent > 100 -%}{%- assign percent = 100 -%}{%- endif -%}
+  {%- assign remaining_money = remaining | money -%}
+
+  <div
+    class="free-shipping-bar"
+    data-free-shipping-bar
+    data-threshold="{{ threshold_cents }}"
+    data-progress-message="{{ progress_message | escape }}"
+    data-success-message="{{ success_message | escape }}"
+    style="
+      --fsb-bg: {{ bg }};
+      --fsb-fill: {{ bar_color }};
+      --fsb-track: {{ track_color }};
+      --fsb-text: {{ text_color }};
+      --fsb-text-size: {{ text_size }}px;
+      --fsb-padding: {{ padding }}px;
+      --fsb-radius: {{ radius }}px;
+    "
+  >
+    <p class="free-shipping-bar__message" data-fsb-message>
+      {%- if remaining <= 0 -%}
+        {{ success_message }}
+      {%- else -%}
+        {{ progress_message | replace: '[amount]', remaining_money }}
+      {%- endif -%}
+    </p>
+    <div class="free-shipping-bar__track">
+      <div class="free-shipping-bar__fill" data-fsb-fill style="width: {{ percent }}%;"></div>
+    </div>
+  </div>
+
+  <script src="{{ 'free_shipping_bar.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Cart free shipping bar",
+  "target": "body",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "For the CART PAGE. A progress bar that appears below the cart title and shows how close the customer is to free shipping. Threshold is set in the app (Settings); colors, spacing, text, and messages in the app (Bar design)."
+    }
+  ]
+}
+{% endschema %}

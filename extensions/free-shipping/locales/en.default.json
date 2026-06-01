@@ -1,10 +1,5 @@
 {
-  "ratings": {
-    "stars": {
-      "label": "Ratings"
-    },
-    "home": {
-      "recommendationText": "Recommended Product!"
-    }
+  "free_shipping_bar": {
+    "name": "Free shipping bar"
   }
 }

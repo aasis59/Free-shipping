@@ -13,6 +13,32 @@ import {
   * @returns {CartDeliveryOptionsDiscountsGenerateRunResult}
   */
 
+// Default minimum cart subtotal for free shipping, used when the merchant
+// hasn't set a threshold in the shop metafield.
+const DEFAULT_FREE_SHIPPING_THRESHOLD = 100;
+
+/**
+ * Reads the threshold from the shop's widget-config metafield
+ * ($app:free_shipping/widget — a JSON blob shared with the storefront bar),
+ * falling back to the default.
+ * @param {RunInput} input
+ * @returns {number}
+ */
+function getThreshold(input) {
+  const raw = input.shop?.metafield?.value;
+  if (raw) {
+    try {
+      const threshold = parseFloat(JSON.parse(raw).threshold);
+      if (Number.isFinite(threshold) && threshold > 0) {
+        return threshold;
+      }
+    } catch {
+      // fall through to default
+    }
+  }
+  return DEFAULT_FREE_SHIPPING_THRESHOLD;
+}
+
 export function cartDeliveryOptionsDiscountsGenerateRun(input) {
   const firstDeliveryGroup = input.cart.deliveryGroups[0];
   if (!firstDeliveryGroup) {
@@ -24,6 +50,11 @@ export function cartDeliveryOptionsDiscountsGenerateRun(input) {
   );
 
   if (!hasShippingDiscountClass) {
+    return {operations: []};
+  }
+
+  const subtotal = parseFloat(input.cart.cost.subtotalAmount.amount);
+  if (!(subtotal > getThreshold(input))) {
     return {operations: []};
   }
 

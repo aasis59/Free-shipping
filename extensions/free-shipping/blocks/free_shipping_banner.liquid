@@ -1,0 +1,37 @@
+{%- comment -%}
+  Simple free-shipping announcement banner.
+  Target: section (added via "Add block" where you want it, e.g. the cart page).
+  Threshold: shop metafield (shared with the discount function).
+  Design (colors, text size, padding, message): own app-owned metaobject,
+  edited in the app under "Banner design".
+{%- endcomment -%}
+{%- assign threshold = shop.metafields["$app:free_shipping"].threshold.value | default: 100 -%}
+{%- assign threshold_money = threshold | times: 100 | money_without_trailing_zeros -%}
+
+{%- assign design = shop.metaobjects["$app:free_shipping_banner"]["free-shipping-banner"].config.value -%}
+{%- assign bg = design.backgroundColor | default: "#008060" -%}
+{%- assign text_color = design.textColor | default: "#ffffff" -%}
+{%- assign text_size = design.textSize | default: 14 -%}
+{%- assign padding = design.padding | default: 10 -%}
+{%- assign message = design.message | default: "🚚 Free shipping on orders over [amount]!" -%}
+
+<div
+  class="fs-free-shipping-banner"
+  style="background: {{ bg }}; color: {{ text_color }}; padding: {{ padding }}px 16px; text-align: center; font-size: {{ text_size }}px; font-weight: 600;"
+  {{ block.shopify_attributes }}
+>
+  {{ message | replace: '[amount]', threshold_money }}
+</div>
+
+{% schema %}
+{
+  "name": "Free shipping banner",
+  "target": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "For ANY / ALL PAGES. A simple text banner — add it to a section that shows site-wide (e.g. the header/announcement section) for all pages, or to a single page. Colors, text size, padding, and the message are set in the app (Banner design); threshold comes from Settings."
+    }
+  ]
+}
+{% endschema %}

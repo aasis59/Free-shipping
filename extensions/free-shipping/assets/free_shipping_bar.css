@@ -1,0 +1,27 @@
+.free-shipping-bar {
+  margin: 1rem 0;
+  padding: var(--fsb-padding, 12px);
+  border-radius: var(--fsb-radius, 8px);
+  background: var(--fsb-bg, #f1f8f5);
+  font-size: var(--fsb-text-size, 14px);
+  color: var(--fsb-text, #202223);
+}
+.free-shipping-bar__message {
+  margin: 0 0 0.5rem;
+  text-align: center;
+}
+.free-shipping-bar__track {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--fsb-track, #e3e3e3);
+  overflow: hidden;
+}
+/* The fill is an empty element; override the theme's `div:empty { display:none }`. */
+.free-shipping-bar__fill {
+  display: block !important;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--fsb-fill, #008060);
+  transition: width 0.3s ease;
+}

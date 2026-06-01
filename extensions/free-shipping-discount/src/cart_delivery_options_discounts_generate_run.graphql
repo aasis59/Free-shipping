@@ -1,10 +1,20 @@
 query DeliveryInput {
   cart {
+    cost {
+      subtotalAmount {
+        amount
+      }
+    }
     deliveryGroups {
       id
     }
   }
   discount {
     discountClasses
+  }
+  shop {
+    metafield(namespace: "$app:free_shipping", key: "widget") {
+      value
+    }
   }
 }

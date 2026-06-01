@@ -4,6 +4,11 @@
     "target": "cart.delivery-options.discounts.generate.run",
     "input": {
       "cart": {
+        "cost": {
+          "subtotalAmount": {
+            "amount": "150.00"
+          }
+        },
         "deliveryGroups": [
           {
             "id": "gid://shopify/DeliveryGroup/0"
@@ -12,6 +17,9 @@
       },
       "discount": {
         "discountClasses": []
+      },
+      "shop": {
+        "metafield": null
       }
     },
     "output": {

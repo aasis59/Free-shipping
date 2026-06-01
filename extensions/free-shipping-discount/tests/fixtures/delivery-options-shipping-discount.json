@@ -7,11 +7,19 @@
         "discountClasses": ["SHIPPING"]
       },
       "cart": {
+        "cost": {
+          "subtotalAmount": {
+            "amount": "150.00"
+          }
+        },
         "deliveryGroups": [
           {
             "id": "gid://shopify/CartDeliveryGroup/1"
           }
         ]
+      },
+      "shop": {
+        "metafield": null
       }
     },
     "output": {
