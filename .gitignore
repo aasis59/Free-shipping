@@ -30,3 +30,5 @@ database.sqlite
 .react-router/
 # Gemini local tooling config
 .gemini/
+# Cursor local tooling config
+.cursor/
