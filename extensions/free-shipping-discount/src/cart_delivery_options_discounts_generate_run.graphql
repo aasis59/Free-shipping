@@ -13,7 +13,7 @@ query DeliveryInput {
     discountClasses
   }
   shop {
-    metafield(namespace: "$app:free_shipping", key: "widget") {
+    metafield(namespace: "$app:free_shipping", key: "threshold") {
       value
     }
   }

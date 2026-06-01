@@ -18,25 +18,16 @@ import {
 const DEFAULT_FREE_SHIPPING_THRESHOLD = 100;
 
 /**
- * Reads the threshold from the shop's widget-config metafield
- * ($app:free_shipping/widget — a JSON blob shared with the storefront bar),
- * falling back to the default.
+ * Reads the threshold from the shop metafield ($app:free_shipping/threshold),
+ * which the app's Settings page writes, falling back to the default.
  * @param {RunInput} input
  * @returns {number}
  */
 function getThreshold(input) {
-  const raw = input.shop?.metafield?.value;
-  if (raw) {
-    try {
-      const threshold = parseFloat(JSON.parse(raw).threshold);
-      if (Number.isFinite(threshold) && threshold > 0) {
-        return threshold;
-      }
-    } catch {
-      // fall through to default
-    }
-  }
-  return DEFAULT_FREE_SHIPPING_THRESHOLD;
+  const threshold = parseFloat(input.shop?.metafield?.value);
+  return Number.isFinite(threshold) && threshold > 0
+    ? threshold
+    : DEFAULT_FREE_SHIPPING_THRESHOLD;
 }
 
 export function cartDeliveryOptionsDiscountsGenerateRun(input) {

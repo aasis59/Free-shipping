@@ -20,7 +20,7 @@
       },
       "shop": {
         "metafield": {
-          "value": "{\"threshold\":200}"
+          "value": "200"
         }
       }
     },
